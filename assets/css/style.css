@@ -1,13 +1,38 @@
+html {
+    background: url("../images/background.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 body {
     width: 90%;
     margin: 0 auto;
     padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
 }
+
+section {
+    margin-bottom: 10px;
+    background: rgba(100, 100, 100, 0.5);
+    padding: 10px;
+}
+
+button {
+    padding: 10px;
+    font-size: 24px;
+}
+
 .player {
+    cursor: pointer;
     display: inline-block;
     margin-right: 20px;
     padding: 0px 10px;
     border: 2px solid green;
+    background: white;
+    color: black;
 }
 
 .enemy {
@@ -21,6 +46,19 @@ body {
     /* border: 1px solid green */
 }
 
-div > h1, div > h2 {
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+div>h2, div>h3 {
     text-align: center;
+}
+
+.title {
+    text-align: center;
+}
+
+#opponent-container {
+    min-height: 200px;
 }

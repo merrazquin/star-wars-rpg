@@ -49,42 +49,40 @@ $(function () {
 
         // define this character's properties
         this.name = name;
+        this.displayName = this.name.replace("_", " ");
         this.baseHealthPoints = healthPoints;
         this.healthPoints = healthPoints;
         this.baseAttackPower = attackPower;
         this.attackPower = attackPower;
         this.counterAttackPower = counterAttackPower;
-        // this.listener = listener;
 
         // build the UI element for this character
         this.domElement = $("<div>");
         this.domElement.attr("id", this.name);
         this.domElement.attr("class", "player");
         this.domElement.html(
-            '<h1>' + this.name.replace("_", " ") + '</h1>' +
+            '<h2>' + this.displayName + '</h2>' +
             '<img src="' + image + '"/>' +
-            '<h2>' + this.baseHealthPoints + '</h2>'
+            '<h3>' + this.baseHealthPoints + '</h3>'
         );
-        $("#characters").append(this.domElement);
 
         this.reset = function () {
-            $(this.domElement).find("h2").text(this.healthPoints = this.baseHealthPoints);
+            $(this.domElement).find("h3").text(this.healthPoints = this.baseHealthPoints);
             this.domElement.attr("class", "player");
             this.attackPower = this.baseAttackPower;
-            $("#characters").append(this.domElement);
         }
         this.takeDamage = function (damage) {
-            $(this.domElement).find("h2").text(this.healthPoints -= damage);
+            $(this.domElement).find("h3").text(this.healthPoints -= damage);
         }
-        this.levelUp = function() {
+        this.levelUp = function () {
             this.attackPower += this.baseAttackPower;
         }
 
-        this.makeEnemy = function() {
+        this.makeEnemy = function () {
             this.domElement.attr("class", "player enemy");
         }
 
-        this.makeOpponent = function() {
+        this.makeOpponent = function () {
             this.domElement.attr("class", "player opponent")
         }
     }
@@ -98,14 +96,15 @@ $(function () {
     // UI references
     var playerContainer = $("#player-container");
     var enemiesContainer = $("#enemies-container");
+    var fightSection = $("#fight-section");
     var opponentContainer = $("#opponent-container");
     var feedback = $("#feedback");
 
     var characters = {
-        "Luke_Skywalker": new character("Luke_Skywalker", 100, 6, 18, "http://via.placeholder.com/150x150"),
-        "Obi-Wan_Kenobi": new character("Obi-Wan_Kenobi", 120, 20, 40, "http://via.placeholder.com/150x150"),
-        "Darth_Sidious": new character("Darth_Sidious", 150, 60, 8, "http://via.placeholder.com/150x150"),
-        "Darth_Maul": new character("Darth_Maul", 180, 15, 30, "http://via.placeholder.com/150x150")
+        "Luke_Skywalker": new character("Luke_Skywalker", 100, 6, 18, "http://via.placeholder.com/150x75"),
+        "Obi-Wan_Kenobi": new character("Obi-Wan_Kenobi", 120, 20, 40, "http://via.placeholder.com/150x75"),
+        "Darth_Sidious": new character("Darth_Sidious", 150, 60, 8, "http://via.placeholder.com/150x75"),
+        "Darth_Maul": new character("Darth_Maul", 180, 15, 30, "http://via.placeholder.com/150x75")
     };
 
 
@@ -119,25 +118,29 @@ $(function () {
         if (!currentPlayer) {
             currentPlayer = character;
             playerContainer.append(character.domElement);
+            playerContainer.find("h1").text("Your Character");
+
 
             $.each(characters, function (key, character) {
-                if(currentPlayer !== character) {
+                if (currentPlayer !== character) {
                     character.makeEnemy();
                     enemiesContainer.append(character.domElement);
                 }
             });
+
+            enemiesContainer.show();
         }
         // if no current opponent is selected, select this oponent
         else if (!currentOpponent) {
             currentOpponent = character;
             currentOpponent.makeOpponent();
             opponentContainer.append(character.domElement);
-        }
-        // otherwise, ignore input
-        else {
-            console.log("player & opponent are already selected");
+            opponentContainer.show();
+            fightSection.show();
+            hideFeedback();
         }
 
+        // if both a player & opponent have been selected, begin the round
         if (currentPlayer && currentOpponent) {
             roundActive = true;
         }
@@ -149,40 +152,81 @@ $(function () {
         gameEnded = false;
         roundActive = true;
 
+        playerContainer.find("h1").text("Choose a player");
+        enemiesContainer.hide();
+        fightSection.hide();
+        opponentContainer.hide();
+        hideFeedback();
+        $("#restart").hide();
+
         $.each(characters, function (key, character) {
             character.reset();
+            playerContainer.append(character.domElement);
         });
     }
 
     function attack() {
         if (!roundActive || gameEnded || !currentPlayer || !currentOpponent) {
-            feedback.text("can't attack");
+            if (!currentOpponent && !gameEnded) {
+                giveFeedback("Please select an opponent");
+            }
             return;
         }
 
         currentOpponent.takeDamage(currentPlayer.attackPower);
+        giveFeedback("You attacked " + currentOpponent.displayName + " for " + currentPlayer.attackPower + " damage.");
 
+        // has the opponent been defeated?
         if (currentOpponent.healthPoints <= 0) {
-            feedback.text("You defeated! " + currentOpponent.name.replace("_", " "));
-            currentOpponent.domElement.fadeOut("fast", currentOpponent.domElement.detach);
+
+            currentOpponent.domElement.detach();
+
+            if (!enemiesContainer.find(".player").length) {
+                giveFeedback("You won! Game Over!");
+                gameEnded = true;
+                $("#restart").show();
+            }
+            else {
+                giveFeedback("You have defeated " + currentOpponent.displayName + ", you may choose to fight another enemy.");
+            }
+
             currentOpponent = null;
             roundActive = false;
         }
         else {
+            // take the counter attack
             currentPlayer.takeDamage(currentOpponent.counterAttackPower);
-        }
 
-        if (currentPlayer.healthPoints <= 0) {
-            feedback.text("You lost");
-            $("#restart").show();
-            roundActive = false;
-            gameEnded = true;
-        } 
+            // have you been defeated?
+            if (currentPlayer.healthPoints <= 0) {
+                giveFeedback("You have been defeated. Game Over.");
+                $("#restart").show();
+                roundActive = false;
+                gameEnded = true;
+            }
+            else {
+                giveFeedback("<br/>" + currentOpponent.displayName + " attacked you back for " + currentOpponent.counterAttackPower + " damage.", true);
+                currentPlayer.levelUp();
+            }
+        }
+    }
+
+    function giveFeedback(text, append) {
+        if (append) {
+            feedback.append(text);
+        }
         else {
-            currentPlayer.levelUp();
+            feedback.text(text)
         }
 
+        if (!feedback.is(":visible")) {
+            feedback.show();
+        }
+    }
 
+    function hideFeedback() {
+        feedback.empty();
+        feedback.hide();
     }
 
     function initialize() {
@@ -192,10 +236,10 @@ $(function () {
             });
         });
 
+        reset();
+
         $("#attack").click(attack);
         $("#restart").click(reset);
-
-        $("#restart").hide();
     }
 
     // calls
