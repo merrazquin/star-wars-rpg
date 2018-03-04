@@ -20,9 +20,23 @@ section {
     padding: 10px;
 }
 
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+div>h2, div>h3 {
+    text-align: center;
+    margin: 5px 0;
+}
+
 button {
     padding: 10px;
     font-size: 24px;
+}
+
+.title {
+    text-align: center;
 }
 
 .player {
@@ -40,25 +54,15 @@ button {
     border-color: black;
 }
 
+#opponent-container {
+    min-height: 200px;
+}
+
 .opponent {
     background: black;
     color: white;
-    /* border: 1px solid green */
 }
 
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-div>h2, div>h3 {
-    text-align: center;
-}
-
-.title {
-    text-align: center;
-}
-
-#opponent-container {
-    min-height: 200px;
+#feedback {
+    line-height: 1.5em;
 }

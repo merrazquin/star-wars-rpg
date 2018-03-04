@@ -87,7 +87,7 @@ $(function () {
         }
     }
 
-
+    // game-tracking variables
     var gameEnded = false;
     var roundActive = false;
     var currentPlayer = null;
@@ -99,6 +99,8 @@ $(function () {
     var fightSection = $("#fight-section");
     var opponentContainer = $("#opponent-container");
     var feedback = $("#feedback");
+    var restartBtn = $("#restart");
+    var attackBtn = $("#attack");
 
     var characters = {
         "Luke_Skywalker": new character("Luke_Skywalker", 100, 6, 18, "http://via.placeholder.com/150x75"),
@@ -107,7 +109,27 @@ $(function () {
         "Darth_Maul": new character("Darth_Maul", 180, 15, 30, "http://via.placeholder.com/150x75")
     };
 
+    // game reset
+    function reset() {
+        currentOpponent = null;
+        currentPlayer = null;
+        gameEnded = false;
+        roundActive = true;
 
+        playerContainer.find("h1").text("Choose a player");
+        enemiesContainer.hide();
+        fightSection.hide();
+        opponentContainer.hide();
+        restartBtn.hide();
+        hideFeedback();
+
+        $.each(characters, function (key, character) {
+            character.reset();
+            playerContainer.append(character.domElement);
+        });
+    }
+
+    // character click handler
     function selectCharacter(character) {
 
         // first, make sure you haven't already assigned the character as a player or opponent
@@ -146,26 +168,9 @@ $(function () {
         }
     }
 
-    function reset() {
-        currentOpponent = null;
-        currentPlayer = null;
-        gameEnded = false;
-        roundActive = true;
-
-        playerContainer.find("h1").text("Choose a player");
-        enemiesContainer.hide();
-        fightSection.hide();
-        opponentContainer.hide();
-        hideFeedback();
-        $("#restart").hide();
-
-        $.each(characters, function (key, character) {
-            character.reset();
-            playerContainer.append(character.domElement);
-        });
-    }
-
+    // attack click handler
     function attack() {
+        // Attack is invalid if round/game has ended, or currentPlayer/currentOponent are missing
         if (!roundActive || gameEnded || !currentPlayer || !currentOpponent) {
             if (!currentOpponent && !gameEnded) {
                 giveFeedback("Please select an opponent");
@@ -173,39 +178,47 @@ $(function () {
             return;
         }
 
+        // deal damage to oponent
         currentOpponent.takeDamage(currentPlayer.attackPower);
         giveFeedback("You attacked " + currentOpponent.displayName + " for " + currentPlayer.attackPower + " damage.");
 
         // has the opponent been defeated?
         if (currentOpponent.healthPoints <= 0) {
 
+            // remove the opponent from the playing field
             currentOpponent.domElement.detach();
 
+            // if you've defeated the last opponent, you've won the game
             if (!enemiesContainer.find(".player").length) {
                 giveFeedback("You won! Game Over!");
                 gameEnded = true;
-                $("#restart").show();
+                restartBtn.show();
             }
+            // otherwise, you must choose a new opponent
             else {
                 giveFeedback("You have defeated " + currentOpponent.displayName + ", you may choose to fight another enemy.");
             }
 
+            // clear out current opponent, end round
             currentOpponent = null;
             roundActive = false;
         }
         else {
-            // take the counter attack
+            // if the opponent is still alive, you must take the counter attack
             currentPlayer.takeDamage(currentOpponent.counterAttackPower);
 
             // have you been defeated?
             if (currentPlayer.healthPoints <= 0) {
                 giveFeedback("You have been defeated. Game Over.");
-                $("#restart").show();
+                restartBtn.show();
                 roundActive = false;
                 gameEnded = true;
             }
+            // if not, show current hit stats
             else {
                 giveFeedback("<br/>" + currentOpponent.displayName + " attacked you back for " + currentOpponent.counterAttackPower + " damage.", true);
+                
+                // increase the player's attack power
                 currentPlayer.levelUp();
             }
         }
@@ -238,8 +251,8 @@ $(function () {
 
         reset();
 
-        $("#attack").click(attack);
-        $("#restart").click(reset);
+        attackBtn.click(attack);
+        restartBtn.click(reset);
     }
 
     // calls
