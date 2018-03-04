@@ -1,0 +1,26 @@
+body {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+.player {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 0px 10px;
+    border: 2px solid green;
+}
+
+.enemy {
+    background: red;
+    border-color: black;
+}
+
+.opponent {
+    background: black;
+    color: white;
+    /* border: 1px solid green */
+}
+
+div > h1, div > h2 {
+    text-align: center;
+}
