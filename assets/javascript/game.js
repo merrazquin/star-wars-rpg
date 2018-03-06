@@ -103,10 +103,10 @@ $(function () {
     var attackBtn = $("#attack");
 
     var characters = {
-        "Luke_Skywalker": new character("Luke_Skywalker", 100, 6, 18, "http://via.placeholder.com/150x75"),
-        "Obi-Wan_Kenobi": new character("Obi-Wan_Kenobi", 120, 20, 40, "http://via.placeholder.com/150x75"),
-        "Darth_Sidious": new character("Darth_Sidious", 150, 60, 8, "http://via.placeholder.com/150x75"),
-        "Darth_Maul": new character("Darth_Maul", 180, 15, 30, "http://via.placeholder.com/150x75")
+        "Luke_Skywalker": new character("Luke_Skywalker", 100, 6, 5, "assets/images/luke.jpeg"),
+        "Obi-Wan_Kenobi": new character("Obi-Wan_Kenobi", 120, 8, 40, "assets/images/obi-wan.jpeg"),
+        "Darth_Sidious": new character("Darth_Sidious", 150, 10, 20, "assets/images/darth-sidious.jpg"),
+        "Darth_Maul": new character("Darth_Maul", 180, 7, 25, "assets/images/darth-maul.jpg")
     };
 
     // game reset
