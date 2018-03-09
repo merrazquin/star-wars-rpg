@@ -103,10 +103,10 @@ $(function () {
     var attackBtn = $("#attack");
 
     var characters = {
-        "Luke_Skywalker": new character("Luke_Skywalker", 100, 6, 5, "assets/images/luke.jpeg"),
-        "Obi-Wan_Kenobi": new character("Obi-Wan_Kenobi", 120, 8, 40, "assets/images/obi-wan.jpeg"),
-        "Darth_Sidious": new character("Darth_Sidious", 150, 10, 20, "assets/images/darth-sidious.jpg"),
-        "Darth_Maul": new character("Darth_Maul", 180, 7, 25, "assets/images/darth-maul.jpg")
+        "Luke_Skywalker":   new character("Luke_Skywalker", 100,    15,     5,  "assets/images/luke.jpeg"),
+        "Obi-Wan_Kenobi":   new character("Obi-Wan_Kenobi", 120,    8,     15, "assets/images/obi-wan.jpeg"),
+        "Darth_Sidious":    new character("Darth_Sidious",  150,    5,     20, "assets/images/darth-sidious.jpg"),
+        "Darth_Maul":       new character("Darth_Maul",     180,    3,     25, "assets/images/darth-maul.jpg")
     };
 
     // game reset
@@ -159,7 +159,7 @@ $(function () {
             opponentContainer.append(character.domElement);
             opponentContainer.show();
             fightSection.show();
-            hideFeedback();
+            giveFeedback("Opponent selected. Attack when ready!");
         }
 
         // if both a player & opponent have been selected, begin the round

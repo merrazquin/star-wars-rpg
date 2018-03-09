@@ -21,13 +21,14 @@ section {
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 18px;
     margin-bottom: 10px;
 }
 
 div>h2, div>h3 {
     text-align: center;
     margin: 5px 0;
+    font-size: 14px;
 }
 
 button {
@@ -36,6 +37,7 @@ button {
 }
 
 .title {
+    font-size: 24px;
     text-align: center;
 }
 
@@ -54,8 +56,15 @@ button {
     border-color: black;
 }
 
-#opponent-container {
+#opponent-container, #feedback {
     min-height: 200px;
+    float: left;
+}
+
+#opponent-container {
+    width: 50%;
+    min-width: 200px;
+    margin-right:10px;
 }
 
 .opponent {
@@ -65,4 +74,5 @@ button {
 
 #feedback {
     line-height: 1.5em;
+    width: calc(50% - 10px);
 }
