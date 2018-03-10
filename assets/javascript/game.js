@@ -53,7 +53,7 @@ $(function () {
         this.baseHealthPoints = healthPoints;
         this.healthPoints = healthPoints;
         this.baseAttackPower = attackPower;
-        this.attackPower = attackPower;
+        this.attackPower = 0;
         this.counterAttackPower = counterAttackPower;
 
         // build the UI element for this character
@@ -69,7 +69,7 @@ $(function () {
         this.reset = function () {
             $(this.domElement).find("h3").text(this.healthPoints = this.baseHealthPoints);
             this.domElement.attr("class", "player");
-            this.attackPower = this.baseAttackPower;
+            this.attackPower = 0;
         }
         this.takeDamage = function (damage) {
             $(this.domElement).find("h3").text(this.healthPoints -= damage);
@@ -178,7 +178,8 @@ $(function () {
             return;
         }
 
-        // deal damage to oponent
+        // increase player's attack power (starts at 0) and deal damage to oponent
+        currentPlayer.levelUp();
         currentOpponent.takeDamage(currentPlayer.attackPower);
         giveFeedback("You attacked " + currentOpponent.displayName + " for " + currentPlayer.attackPower + " damage.");
 
@@ -217,9 +218,6 @@ $(function () {
             // if not, show current hit stats
             else {
                 giveFeedback("<br/>" + currentOpponent.displayName + " attacked you back for " + currentOpponent.counterAttackPower + " damage.", true);
-                
-                // increase the player's attack power
-                currentPlayer.levelUp();
             }
         }
     }
