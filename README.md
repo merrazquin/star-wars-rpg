@@ -2,9 +2,9 @@
 
 ![Star Wars RPG screenshot](assets/images/gameplay.png)
 
-### [Play the game](https://merrazquin.github.io/star-wars-rpg/)
+## [Play the game](https://merrazquin.github.io/star-wars-rpg/)
 
-### How the app works:
+## Overview
 
 * When the game starts, the player will choose a character by clicking on the fighter's picture. The player will fight as that character for the rest of the game.
 
@@ -26,7 +26,7 @@
 
 * The players should be able to win and lose the game no matter what character they choose. The challenge should come from picking the right enemies, not choosing the strongest player.
 
-### Developed with
+## Built with
 * JQuery
 * HTML5
 * CSS3
